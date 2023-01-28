@@ -2,7 +2,7 @@
 
 An impossible button implementation in <strong>vanilla</strong> js.
 
-<img align=center src="demo.png">
+<img align="center" src="demo.PNG">
 
 ## [DEMO](https://codepen.io/b0-b/pen/OJwwyWL)
 
