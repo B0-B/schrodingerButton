@@ -24,14 +24,13 @@
 
     // button parameters
     mainWrapper.buttonState = 0;
-    var buttonInteractive = true;
     var dir = 0;
 
     // describe everything in relative coords
     function x (x) { return x * w }
     function y (y) { return y * h }
 
-    function circ (x,y,r,stroke=null, strokeWidth=3) {
+    function circ (x, y, r, stroke=null, strokeWidth=3) {
         ctx.beginPath();
         ctx.arc(x, y, r, 0, 2*Math.PI);
         ctx.closePath();
@@ -489,7 +488,7 @@
     canvas.addEventListener('click', function(event) {
         var x = event.pageX - event.target.offsetLeft,
             y = event.pageY - event.target.offsetTop;
-        if (buttonInteractive 
+        if (!mainWrapper.buttonState
             && y > .4*h && y < .6*h 
             && x > (.5-.2)*w && x < (.5-.2)*w + (2*.2)*w) {   
                 flipAnimate()
