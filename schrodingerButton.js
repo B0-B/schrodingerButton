@@ -256,8 +256,8 @@
         ctx.closePath();
         ctx.restore()
 
-        const fontSize = Math.floor(w/200*6);
-        ctx.font = `bold ${fontSize}px Times New Roman`
+        const fontSize = Math.floor(w/200*8);
+        ctx.font = `bold ${fontSize}px Arial`
         ctx.fillStyle = `rgba(0,0,0,${speechBubbleOpacity})`;
         let t = ctx.measureText(phrase);
         console.log(t)
