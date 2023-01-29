@@ -96,6 +96,14 @@
     var speechBubbleOpacity = 0;
     var pawState = 0;
     var catAngry = 0;
+    var phrases = [
+        'HΨ = EΨ',
+        '#$!?',
+        '🐟',
+        '🐁',
+        '☢️'
+    ]
+    var phrase = phrases[0];
     var pupils = 1;
     var lidsMax = .7;
     var lids = lidsMax;
@@ -251,9 +259,9 @@
         const fontSize = Math.floor(w/200*6);
         ctx.font = `bold ${fontSize}px Times New Roman`
         ctx.fillStyle = `rgba(0,0,0,${speechBubbleOpacity})`;
-        let t = ctx.measureText('HΨ = EΨ');
+        let t = ctx.measureText(phrase);
         console.log(t)
-        ctx.fillText('HΨ = EΨ',_x+x(.1)-t.width/2,_y+y(.16)/2,100);
+        ctx.fillText(phrase,_x+x(.1)-t.width/2,_y+y(.16)/2,100);
         resetTransform();
         
     }
@@ -380,7 +388,7 @@
 
                 // dramatic waiting
                 await new Promise( r => setTimeout(r, 100*count*u()) )
-                if ( u() < 1-1/(1+.2*count) ) {
+                if ( u() < 1-1/(1+.05*Math.sqrt(count)) ) {
                     await lowerEyes();
                     await new Promise( r => setTimeout(r, 300) )
                     await raiseEyes();
@@ -388,11 +396,36 @@
                     await lowerEyes();
                     await new Promise( r => setTimeout(r, 300) )
                     await raiseEyes();
-                    await new Promise( r => setTimeout(r, 1e3+1e3*count*u()) )
+                    await new Promise( r => setTimeout(r, 1e3+5e2*Math.sqrt(count)*u()) )
                     await lowerEyes();
                 }
     
                 // paw flips back slider
+                if (count > 0 && u() < .15) {
+
+                    // hesitate
+                    await raiseEyes();
+                    let [ T, dt ] = [ 400, 10 ];
+                    steps = Math.floor(T/dt);
+                    for (let t = 0; t < steps; t++) {
+                        pawState = transition(t,steps,'sin');
+                        mainWrapper.buttonState = 1-.2*pawState;
+                        await new Promise( r => setTimeout(r, dt) )
+                    }
+                    await new Promise( r => setTimeout(r, 1e3+u()*2e3) )
+                    await lowerEyes();
+                    [ T, dt ] = [ 200, 10 ];
+                    steps = Math.floor(T/dt);
+                    for (let t = 0; t < steps; t++) {
+                        let val = transition(t,steps,'sin');
+                        pawState = 1-val;
+                        mainWrapper.buttonState = .8+.2*val;
+                        await new Promise( r => setTimeout(r, dt) )
+                    }
+                    await new Promise( r => setTimeout(r, 5e2) )
+
+                } 
+
                 flipAnimate();
                 [ T, dt ] = [ 140, 10 ];
                 steps = Math.floor(T/dt);
@@ -400,6 +433,8 @@
                     pawState = transition(t,steps,'sigmoid')
                     await new Promise( r => setTimeout(r, dt) )
                 }
+
+                // return paw
                 [ T, dt ] = [ 140, 10 ];
                 steps = Math.floor(T/dt);
                 for (let t = 0; t < steps; t++) {
@@ -411,7 +446,10 @@
                 await raiseEyes();
 
                 // meow at some times
-                if (count > 0 && u() < .1) {
+                if (count > 0 && u() < .2) {
+
+                    
+                    phrase = phrases[Math.floor(u()*phrases.length)];
 
                     await new Promise( r => setTimeout(r, 50) )
                     meow.play()
