@@ -1,8 +1,15 @@
-
+/*#############################################################################
+schrodingerButton.js: An impossible button implementation with motion graphics.
+GNU GENERAL PUBLIC LICENSE - Version 3, 29 June 2007
+Copyright © 2007 Free Software Foundation, Inc. <https://fsf.org/>
+Everyone is permitted to copy and distribute verbatim copies
+of this license document, but changing it is not allowed.
+Autor copyright © github.com/B0-B 2023.
+############################################################################### */
 (async () => {
 
+    // -- dock to dom --
     const mainWrapper = document.getElementById('schrodinger-button');
-    
     const canvas = document.createElement('canvas');
     canvas.style.height = '100%';
     canvas.style.width = '100%';
@@ -12,63 +19,14 @@
     const ctc = ctx.canvas;
     const [ h, w ] = [ ctc.height, ctc.width ] = [ mainWrapper.clientHeight, mainWrapper.clientWidth ];
 
-    const blur = .5;
 
+
+    // -- global methods --
     // iid
     function u() {return Math.random()};
-
     // sound
     function au(b64){return new Audio("data:audio/mpeg;base64,"+b64)}
-
-    // ---- Button ----
-
-    // button parameters
-    mainWrapper.buttonState = 0;
-    var dir = 0;
-
-    // describe everything in relative coords
-    function x (x) { return x * w }
-    function y (y) { return y * h }
-
-    function circ (x, y, r, stroke=null, strokeWidth=3) {
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, 2*Math.PI);
-        ctx.closePath();
-        ctx.fill();
-        if (stroke) {
-            ctx.lineWidth = strokeWidth;
-            ctx.strokeStyle = stroke;
-            ctx.stroke()
-        }
-    }
-
-    function drawButton (knobPosition=0) {
-
-        const radius = y(.1);
-        const off = .2;
-
-        ctx.fillStyle = '#ddd';
-        
-        ctx.fillRect(x(.5-off),y(.4),x(2*off),2*radius);
-        for (let i of [-1, 1]) {
-            circ(x(.5+i*off), y(.5), radius)
-        }
-        
-        // load strip
-        ctx.shadowBlur = blur;
-        ctx.fillStyle = '#46e089';
-        ctx.shadowColor = ctx.fillStyle;
-        circ(x(.5-off), y(.5), radius)
-        ctx.fillRect( x(.5-off), y(.4), x(2*knobPosition*off), y(.2) );
-        ctx.shadowBlur = 0;
-
-        // knob
-        ctx.fillStyle = '#444';
-        
-        circ(x(.5+(-1+2*knobPosition)*off), y(.5), radius, 'white');
-
-    } 
-
+    // motion
     function transition (s, steps, type='linear') {
         if ( type == 'linear' ) {
             return s / (steps-1)
@@ -81,9 +39,59 @@
             return 1/(1+Math.exp(-(-4+8*s/(steps-1))))
         }
     }
+    // GL
+    function circ (x, y, r, stroke=null, strokeWidth=3) {
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, 2*Math.PI);
+        ctx.closePath();
+        ctx.fill();
+        if (stroke) {
+            ctx.lineWidth = strokeWidth;
+            ctx.strokeStyle = stroke;
+            ctx.stroke()
+        }
+    }
+
+
+    // ---- Button ----
+
+    // button parameters
+    mainWrapper.buttonState = 0;
+    var dir = 0;
+
+    // describe everything in relative coords
+    function x (x) { return x * w }
+    function y (y) { return y * h }
+
+    function drawButton (knobPosition=0) {
+
+        /* Renders the base button. */
+
+        const radius = y(.1);
+        const off = .2;
+
+        ctx.fillStyle = '#ddd';
+        
+        ctx.fillRect(x(.5-off),y(.4),x(2*off),2*radius);
+        for (let i of [-1, 1]) {
+            circ(x(.5+i*off), y(.5), radius)
+        }
+        
+        // load strip
+        ctx.fillStyle = '#46e089';
+        ctx.shadowColor = ctx.fillStyle;
+        circ(x(.5-off), y(.5), radius)
+        ctx.fillRect( x(.5-off), y(.4), x(2*knobPosition*off), y(.2) );
+
+        // knob
+        ctx.fillStyle = '#444';
+        
+        circ(x(.5+(-1+2*knobPosition)*off), y(.5), radius, 'white');
+
+    }
 
     
-
+    
     // -- cat --
     var meow = au("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");
     var catColor = '#222';
@@ -325,6 +333,7 @@
         }
     }
 
+
       
     // -- animate --
     async function flipAnimate () {
@@ -370,6 +379,7 @@
         }
 
     }
+
 
 
     // -- rejection algorithm --
@@ -483,8 +493,8 @@
     }
 
 
-    // -- init --
 
+    // -- init --
     canvas.addEventListener('click', function(event) {
         var x = event.pageX - event.target.offsetLeft,
             y = event.pageY - event.target.offsetTop;
@@ -494,7 +504,6 @@
                 flipAnimate()
         }
     }, false);
-
     render()
 
     // instantiate backend processes
