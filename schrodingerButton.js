@@ -17,7 +17,7 @@ Autor copyright © github.com/B0-B 2023.
 
     const ctx = canvas.getContext('2d');
     const ctc = ctx.canvas;
-    const [ h, w ] = [ ctc.height, ctc.width ] = [ mainWrapper.clientHeight, mainWrapper.clientWidth ];
+    const [ h, w ] = [ ctc.height, ctc.width ] = [ mainWrapper.clientWidth, mainWrapper.clientWidth ];
 
 
 
