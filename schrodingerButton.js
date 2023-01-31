@@ -11,7 +11,7 @@ Autor copyright © github.com/B0-B 2023.
     // -- dock to dom --
     const mainWrapper = document.getElementById('schrodinger-button');
     const canvas = document.createElement('canvas');
-    canvas.style.height = '100%';
+    // canvas.style.height = '100%';
     canvas.style.width = '100%';
     mainWrapper.appendChild(canvas);
 
